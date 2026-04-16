@@ -1,0 +1,36 @@
+# dbt
+# -------------------------
+dbt_transform/target/
+dbt_transform/dbt_packages/
+dbt_transform/logs/
+
+# dbt local env files
+# -------------------------
+dbt_transform/.user.yml
+
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Environment files
+# -------------------------
+.env
+.env.*
+
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# Logs
+# -------------------------
+logs/
+*.log
+
+# Docker (optional)
+# -------------------------
+*.pid
