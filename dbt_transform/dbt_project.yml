@@ -37,3 +37,6 @@ models:
 
     02_intermediate:
       +materialized: table
+
+    03_marts:
+      +materialized: table

@@ -2,25 +2,27 @@ CREATE TABLE IF NOT EXISTS raw_german_credit (
   id SERIAL PRIMARY KEY,
   age INTEGER,
   sex VARCHAR,
-  jobs INTEGER,
+  job INTEGER,
   housing VARCHAR,
   saving_accounts VARCHAR,
-  checking_accounts VARCHAR,
+  checking_account VARCHAR,
   credit_amount INTEGER,
   duration INTEGER,
-  purpose VARCHAR
+  purpose VARCHAR,
+  risk VARCHAR
 );
 
 COPY raw_german_credit (
   age,
   sex,
-  jobs,
+  job,
   housing,
   saving_accounts,
-  checking_accounts,
+  checking_account,
   credit_amount,
   duration,
-  purpose
+  purpose,
+  risk
 )
 FROM '/docker-entrypoint-initdb.d/german_credit_data.csv'
 DELIMITER ','

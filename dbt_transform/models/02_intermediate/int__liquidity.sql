@@ -12,7 +12,7 @@ select
   end as savings_score,
 
   -- Same for checking
-  case checking_accounts
+  case checking_account
     when 'little' then 1
     when 'moderate' then 2
     when 'rich' then 3
@@ -21,7 +21,7 @@ select
   
   -- Binary flags
   (saving_accounts is null)::int as has_no_savings_info,
-  (checking_accounts is null)::int as has_no_checking_info
+  (checking_account is null)::int as has_no_checking_info
 
 from {{ ref('stg__german_credit') }}
 ),
