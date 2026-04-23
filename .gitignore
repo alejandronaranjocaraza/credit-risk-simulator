@@ -15,6 +15,7 @@ __pycache__/
 .venv/
 venv/
 env/
+**/*.ipynb_checkpoints*/
 
 # Environment files
 # -------------------------
@@ -34,3 +35,8 @@ logs/
 # Docker (optional)
 # -------------------------
 *.pid
+
+# Serialized models
+# -------------------------
+*.pkl
+
