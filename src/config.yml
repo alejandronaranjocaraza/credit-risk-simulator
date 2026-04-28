@@ -7,7 +7,7 @@ source:
   model: 'fct__german_credit_wide'
 
 models:
-  log-regression:
+  log-regression-cv:
     columns:
       - 'risk'
       - 'sex'
@@ -21,28 +21,40 @@ models:
       - 'housing_stability_score'
       - 'purpose_risk_group'
     scale:
-      - 'credit_exposure'
-      - 'savings_score'
-      - 'checking_score'
-      - 'job_skill_level'
-      - 'housing_stability_score'
-    one-hot-encode:
-      - 'sex'
-      - 'loan_term_tier'
-      - 'purpose_risk_group'
+      columns:
+        - 'credit_exposure'
+        - 'savings_score'
+        - 'checking_score'
+        - 'job_skill_level'
+        - 'housing_stability_score'
+    one-hot:
+      drop-first: true
+      columns:
+        - 'sex'
+        - 'loan_term_tier'
+        - 'purpose_risk_group'
     target: 'risk'
     threshold: 0.53
   decision-tree:
-    scale:
-      - column1
-      - column2
-      - column3
-      - column4
-      - etc
-    one-hot-encode:
-      - column1
-      - column2
-      - column3
-      - column4
-      - etc
+    columns:
+      - 'risk'
+      - 'age_numeric_group'
+      - 'sex'
+      - 'loan_term_numeric_tier'
+      - 'saving_accounts'
+      - 'checking_account'
+      - 'has_no_savings_info'
+      - 'has_no_checking_info'
+      - 'job_skill_level'
+      - 'housing'
+      - 'purpose_risk_group'
+    one-hot:
+      drop-first: false
+      columns:
+        - 'sex'
+        - 'saving_accounts'
+        - 'checking_account'
+        - 'housing'
+        - 'purpose_risk_group'
     target: 'risk'
+    threshold: 0.53

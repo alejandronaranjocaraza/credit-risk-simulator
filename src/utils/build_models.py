@@ -3,7 +3,19 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import StratifiedKFold
 from sklearn.calibration import CalibratedClassifierCV
 
-def build_log_regression():
+
+def build_model(name: str()):
+
+    builders = {
+        'log-regression-cv': lambda: build_log_regression_cv(),
+        'decision-tree': lambda: build_decision_tree()
+    }
+    if name not in builders:
+        raise ValueError("Unkown model: "+name+".")
+    return builders[name]()
+
+
+def build_log_regression_cv(calibrate=True):
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
@@ -16,11 +28,14 @@ def build_log_regression():
         max_iter=1000,
         use_legacy_attributes=False
     )
-    calibrated_model = CalibratedClassifierCV(model, method='sigmoid')
+    if calibrate:
+        res = CalibratedClassifierCV(model, method='sigmoid')
+    else:
+        res = model
+    return res
 
-    return calibrated_model
 
-def build_decision_tree():
+def build_decision_tree(calibrate=True):
     tree = DecisionTreeClassifier(
         max_depth=3,
         min_samples_leaf=15,
@@ -28,5 +43,8 @@ def build_decision_tree():
         criterion='gini',
         random_state=42
     )
-    return tree
-
+    if calibrate:
+        res = CalibratedClassifierCV(tree, method='sigmoid')
+    else:
+        res = tree
+    return res
