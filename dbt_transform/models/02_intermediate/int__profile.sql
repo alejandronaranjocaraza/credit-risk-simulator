@@ -1,6 +1,21 @@
 with features as (
 select
   id,
+
+  -- Age group
+  case
+    when age < 30 then 'young_adult'
+    when age < 45 then 'adult'
+    when age < 65 then 'mature_adult'
+    else 'senior' end as age_group,
+
+  -- Age group -- numeric
+  case
+    when age < 30 then 0
+    when age < 45 then 1
+    when age < 65 then 2
+    else 3 end as age_numeric_group,
+
   
   -- Housing stability score
   case housing
@@ -40,6 +55,8 @@ from {{ ref('stg__german_credit') }}
 )
 select
   id,
+  age_group,
+  age_numeric_group,
   housing_stability_score,
   stable_profile_flag,
   high_risk_profile_flag,

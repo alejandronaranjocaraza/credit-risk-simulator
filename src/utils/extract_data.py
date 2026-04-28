@@ -1,35 +1,34 @@
 from sqlalchemy import create_engine
 import pandas as pd
 
+def extract_data(
+        credentials: dict(),
+        table_name: str(),
+        columns: list()
+):
+    try:
 
-def extract_data():
+        database = credentials['database']
+        user = credentials['user']
+        password = credentials['password']
+        host = credentials['host']
+        port = credentials['port']
 
-    database = 'postgres'
-    user = 'postgres'
-    password = 'postgres'
-    host = 'localhost'
-    port = '5433'
+    except:
 
-    engine = create_engine(
-        f"postgresql://{user}:{password}@{host}:{port}/{database}")
-    query = "select * from fct__german_credit_wide"
+        print("Error: Not all credentials specified")
+        raise
 
-    data = pd.read_sql(query, engine)
-    data.drop(columns='id', inplace=True)
+    try:
+        engine = create_engine(
+            f"postgresql://{user}:{password}@{host}:{port}/{database}")
+        query = "select "
+        query += ",".join(columns)
+        query += f" from {table_name};"
 
-    X = data[[
-        'sex',
-        'credit_exposure',
-        'loan_term_tier',
-        'savings_score',
-        'checking_score',
-        'has_no_savings_info',
-        'has_no_checking_info',
-        'job_skill_level',
-        'housing_stability_score',
-        'purpose_risk_group'
-    ]]
+        data = pd.read_sql(query, engine)
+        return data
 
-    y = data['risk']
-
-    return X, y
+    except Exception as err:
+        print("Data import error: ", err)
+        raise

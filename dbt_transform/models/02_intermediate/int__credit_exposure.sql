@@ -19,7 +19,14 @@ select
     when duration_months <= 12 then 'short'
     when duration_months <= 24 then 'medium'
     else 'long'
-  end as loan_term_tier
+  end as loan_term_tier,
+  
+  -- Duration tiers -- numeric
+  case
+    when duration_months <= 12 then 0
+    when duration_months <= 24 then 1
+    else 3
+  end as loan_term_numeric_tier
 
 from {{ ref('stg__german_credit') }}
 )
@@ -29,5 +36,6 @@ select
   credit_exposure,
   credit_per_age_year,
   monthly_payment_estimate,
-  loan_term_tier
+  loan_term_tier,
+  loan_term_numeric_tier
 from features

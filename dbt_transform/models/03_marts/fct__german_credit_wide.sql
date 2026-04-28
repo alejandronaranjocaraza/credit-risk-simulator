@@ -7,6 +7,8 @@ select
 
   -- General profile
   bf.age,
+  p.age_numeric_group,
+  p.age_group, -- non-numeric
   bf.sex, -- non-numeric
 
   -- Credit exposure
@@ -16,6 +18,7 @@ select
   ce.credit_exposure,
   ce.credit_per_age_year,
   ce.monthly_payment_estimate,
+  ce.loan_term_numeric_tier,
   ce.loan_term_tier, -- non-numeric
 
   -- Liquidity

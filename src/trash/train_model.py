@@ -10,7 +10,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.calibration import CalibratedClassifierCV
 
 
-def scale(df):
+def scale(df, columns):
     numeric = list(df.select_dtypes(include=['number']).columns)
     scaler = StandardScaler()
     numeric_scaled = scaler.fit_transform(df[numeric])
@@ -63,14 +63,7 @@ def extract_data(
         raise
 
 
-def generate_model(X, y):
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=0.2,
-        stratify=y,
-        random_state=42
-    )
+def generate_model(X_train, y_train):
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
