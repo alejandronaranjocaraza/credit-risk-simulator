@@ -6,7 +6,7 @@ This repository provides an example of a machine learning pipeline to predict cu
 
 ## Dataset
 
-The project uses the [Statlog German Credit dataset](https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data), a classic benchmark dataset containing 1,000 past loan applicants classified as good or bad credit risks. Each record includes demographic information (sex, age, housing, job skill level) and credit application details (duration, loan amount), making it well suited for binary credit default classification.
+The project uses the [Statlog German Credit dataset](https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data), a classic benchmark dataset containing 1,000 past loan applicants classified as good or bad credit risks. Each record includes demographic information (sex, age, housing, job skill level) and credit application details (duration, loan amount).
 
 ## Approach
 
@@ -53,7 +53,7 @@ New loan applications are simulated and scored through an Apache Airflow DAG, wh
 ├── src/
 │   ├── train_model.py
 │   ├── evaluate_model.py
-│   └── feature_engineering.py  ← shared logic, used by scoring too
+│   └── feature_engineering.py
 │
 ├── airflow/
 │   ├── dags/
