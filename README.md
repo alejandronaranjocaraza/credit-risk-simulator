@@ -100,23 +100,23 @@ Deploying the project from a docker-container required a review of databse expos
 
 ## References
 
-- Reis, J., & Housley, M. (2022). *Fundamentals of Data Engineering.* O'Reilly.
+- Reis, J., & Housley, M. (2022). *Fundamentals of Data Engineering.* O'Reilly.<br>
   <https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/>
-- Obe, R., & Hsu, L. (n.d.). *PostgreSQL: Up and Running.* O'Reilly.
+- Obe, R., & Hsu, L. (n.d.). *PostgreSQL: Up and Running.* O'Reilly.<br>
   <https://learning.oreilly.com/library/view/postgresql-up-and/9798341660885/ch01.html#sect2_pgAdmin>
-- Müller, A. C., & Guido, S. (2016). *Introduction to Machine Learning with Python.* O'Reilly.
+- Müller, A. C., & Guido, S. (2016). *Introduction to Machine Learning with Python.* O'Reilly.<br>
   <https://www.oreilly.com/library/view/introduction-to-machine/9781449369880/>
-- Géron, A. (2022). *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow* (3rd ed.). O'Reilly.
+- Géron, A. (2022). *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow* (3rd ed.). O'Reilly.<br>
   <https://learning.oreilly.com/library/view/hands-on-machine-learning/9781491962282/>
-- *dbt Documentation.*
+- *dbt Documentation.*<br>
   <https://docs.getdbt.com/docs/introduction>
-- *PostgreSQL Documentation.*
+- *PostgreSQL Documentation.*<br>
   <https://www.postgresql.org/docs/>
-- *Docker documentation*
+- *Docker documentation*<br>
   <https://docs.docker.com/>
-- *scikit-learn Documentation.*
+- *scikit-learn Documentation.*<br>
   <http://scikit-learn.org/stable/>
-- *GeeksforGeeks.*
+- *GeeksforGeeks.*<br>
   <https://www.geeksforgeeks.org/>
-- *DataCamp.*
+- *DataCamp.*<br>
   <https://www.datacamp.com/>
