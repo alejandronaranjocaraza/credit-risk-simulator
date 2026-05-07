@@ -9,8 +9,5 @@ select
   credit_amount,
   duration as duration_months,
   nullif(purpose,'NA') as purpose,
-  case
-    when risk = 'good' then 1
-    when risk = 'bad' then 0
-    else null end as risk
-from {{ source('german_credit','raw_german_credit') }}
+  defaulted
+from {{ source('raw_applicants','raw_applicants') }}

@@ -28,7 +28,7 @@ select
     else 3
   end as loan_term_numeric_tier
 
-from {{ ref('stg__german_credit') }}
+from {{ ref('stg__applicants') }}
 )
 select
   id,

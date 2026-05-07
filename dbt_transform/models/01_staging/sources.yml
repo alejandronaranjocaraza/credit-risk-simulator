@@ -1,8 +1,8 @@
 version: 2
 
 sources:
-  - name: german_credit
+  - name: raw_applicants
     database: postgres
     schema: public
     tables:
-      - name: raw_german_credit
+      - name: raw_applicants

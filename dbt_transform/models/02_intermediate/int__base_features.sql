@@ -9,5 +9,5 @@ select
   credit_amount, -- numeric
   duration_months, -- numeric
   purpose, -- non-numeric
-  risk -- binary
-from {{ ref('stg__german_credit') }}
+  defaulted -- binary
+from {{ ref('stg__applicants') }}

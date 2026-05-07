@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS raw_german_credit (
+CREATE TABLE IF NOT EXISTS raw_applicants (
   id SERIAL PRIMARY KEY,
   age INTEGER,
   sex VARCHAR,
@@ -9,10 +9,13 @@ CREATE TABLE IF NOT EXISTS raw_german_credit (
   credit_amount INTEGER,
   duration INTEGER,
   purpose VARCHAR,
-  risk VARCHAR
+  simulated_at TIMESTAMP DEFAULT NOW(),
+  rating DECIMAL DEFAULT NULL,
+  approved BOOLEAN DEFAULT NULL,
+  defaulted BOOLEAN DEFAULT NULL
 );
 
-COPY raw_german_credit (
+COPY raw_applicants (
   age,
   sex,
   job,
@@ -22,7 +25,7 @@ COPY raw_german_credit (
   credit_amount,
   duration,
   purpose,
-  risk
+  defaulted
 )
 FROM '/docker-entrypoint-initdb.d/german_credit_data.csv'
 DELIMITER ','

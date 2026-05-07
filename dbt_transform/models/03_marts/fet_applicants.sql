@@ -3,7 +3,7 @@ select
   bf.id,
 
   -- Target
-  bf.risk,
+  bf.defaulted,
 
   -- General profile
   bf.age,

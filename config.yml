@@ -1,0 +1,60 @@
+source:
+  database: 'postgres'
+  user: 'postgres'
+  password: 'postgres'
+  host: 'warehouse-db'
+  port: '5432'
+  model: 'fet__applicants'
+
+models:
+  log-regression-cv:
+    active: true
+    features:
+      - 'sex'
+      - 'credit_exposure'
+      - 'loan_term_tier'
+      - 'savings_score'
+      - 'checking_score'
+      - 'has_no_savings_info'
+      - 'has_no_checking_info'
+      - 'job_skill_level'
+      - 'housing_stability_score'
+      - 'purpose_risk_group'
+    scale:
+      columns:
+        - 'credit_exposure'
+        - 'savings_score'
+        - 'checking_score'
+        - 'job_skill_level'
+        - 'housing_stability_score'
+    one-hot:
+      drop-first: true
+      columns:
+        - 'sex'
+        - 'loan_term_tier'
+        - 'purpose_risk_group'
+    target: 'defaulted'
+    threshold: 0.53
+  decision-tree:
+    active: true
+    columns:
+      - 'age_numeric_group'
+      - 'sex'
+      - 'loan_term_numeric_tier'
+      - 'saving_accounts'
+      - 'checking_account'
+      - 'has_no_savings_info'
+      - 'has_no_checking_info'
+      - 'job_skill_level'
+      - 'housing'
+      - 'purpose_risk_group'
+    one-hot:
+      drop-first: false
+      columns:
+        - 'sex'
+        - 'saving_accounts'
+        - 'checking_account'
+        - 'housing'
+        - 'purpose_risk_group'
+    target: 'defaulted'
+    threshold: 0.53

@@ -51,7 +51,7 @@ select
   end as purpose_risk_group
 
 
-from {{ ref('stg__german_credit') }}
+from {{ ref('stg__applicants') }}
 )
 select
   id,

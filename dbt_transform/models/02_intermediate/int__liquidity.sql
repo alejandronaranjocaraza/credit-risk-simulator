@@ -23,7 +23,7 @@ select
   (saving_accounts is null)::int as has_no_savings_info,
   (checking_account is null)::int as has_no_checking_info
 
-from {{ ref('stg__german_credit') }}
+from {{ ref('stg__applicants') }}
 ),
 features as (
 select
