@@ -1,3 +1,4 @@
+# Needs adjusting for running inside docker container
 from utils.extract_data import extract_data
 from utils.transform_data import scale
 from utils.transform_data import one_hot_encode
@@ -14,24 +15,29 @@ import json
 with open('config.yml', 'r') as f:
     config = yaml.load(f, Loader=yaml.SafeLoader)
 
-model_name = 'log-regression-cv'
+model_name = None
+for model in config['models'].keys():
+    if config['models'][model]['active'] == True:
+        model_name = model
+        break
 
 # Create and save regression model
 credentials = config['source']
 table = credentials.pop('model')
-cols = config['models'][model_name]['columns']
+cols = config['models'][model_name]['features']
 target = config['models'][model_name]['target']
-data = extract_data(credentials, table, cols)
+threshold = config['models'][model_name]['threshold']
+data = extract_data(credentials, table, cols + [target])
 y = data[target]
 X = data.drop(target, axis=1, inplace=False)
 
 # Transform data
 if 'scale' in config['models'][model_name]:
-    scale_cols = config['models'][model_name]['scale']['columns']
+    scale_cols = config['models'][model_name]['scale']['features']
     X = scale(X, scale_cols)
 
 if 'one-hot' in config['models'][model_name]:
-    encode_cols = config['models'][model_name]['one-hot']['columns']
+    encode_cols = config['models'][model_name]['one-hot']['features']
     drop_first = config['models'][model_name]['one-hot']['drop-first']
     X = one_hot_encode(X, encode_cols, drop_first)
 
@@ -51,7 +57,6 @@ with open("../models/"+model_name+".pkl", "wb") as f:
     pickle.dump(model, f)
 
 # Evaluate model
-threshold = config['models'][model_name]['threshold']
 y_prob, y_pred = model_predict(model, X_test, threshold)
 metrics = evaluate_model(y_prob, y_pred, y_test)
 

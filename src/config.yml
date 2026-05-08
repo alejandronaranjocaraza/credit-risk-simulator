@@ -2,14 +2,14 @@ source:
   database: 'postgres'
   user: 'postgres'
   password: 'postgres'
-  host: 'localhost'
-  port: '5433'
-  model: 'fct__german_credit_wide'
+  host: 'localhost' #warehouse-db for postgres
+  port: '5433' #5432 for inside docker container
+  model: 'fet__applicants'
 
 models:
   log-regression-cv:
-    columns:
-      - 'risk'
+    active: true
+    features:
       - 'sex'
       - 'credit_exposure'
       - 'loan_term_tier'
@@ -21,7 +21,7 @@ models:
       - 'housing_stability_score'
       - 'purpose_risk_group'
     scale:
-      columns:
+      features:
         - 'credit_exposure'
         - 'savings_score'
         - 'checking_score'
@@ -29,15 +29,15 @@ models:
         - 'housing_stability_score'
     one-hot:
       drop-first: true
-      columns:
+      features:
         - 'sex'
         - 'loan_term_tier'
         - 'purpose_risk_group'
-    target: 'risk'
+    target: 'defaulted'
     threshold: 0.53
   decision-tree:
-    columns:
-      - 'risk'
+    active: true
+    features:
       - 'age_numeric_group'
       - 'sex'
       - 'loan_term_numeric_tier'
@@ -50,11 +50,11 @@ models:
       - 'purpose_risk_group'
     one-hot:
       drop-first: false
-      columns:
+      features:
         - 'sex'
         - 'saving_accounts'
         - 'checking_account'
         - 'housing'
         - 'purpose_risk_group'
-    target: 'risk'
+    target: 'defaulted'
     threshold: 0.53

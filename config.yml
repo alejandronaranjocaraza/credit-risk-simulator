@@ -21,7 +21,7 @@ models:
       - 'housing_stability_score'
       - 'purpose_risk_group'
     scale:
-      columns:
+      features:
         - 'credit_exposure'
         - 'savings_score'
         - 'checking_score'
@@ -29,7 +29,7 @@ models:
         - 'housing_stability_score'
     one-hot:
       drop-first: true
-      columns:
+      features:
         - 'sex'
         - 'loan_term_tier'
         - 'purpose_risk_group'
@@ -37,7 +37,7 @@ models:
     threshold: 0.53
   decision-tree:
     active: true
-    columns:
+    features:
       - 'age_numeric_group'
       - 'sex'
       - 'loan_term_numeric_tier'
@@ -50,7 +50,7 @@ models:
       - 'purpose_risk_group'
     one-hot:
       drop-first: false
-      columns:
+      features:
         - 'sex'
         - 'saving_accounts'
         - 'checking_account'

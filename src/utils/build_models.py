@@ -15,7 +15,7 @@ def build_model(name: str()):
     return builders[name]()
 
 
-def build_log_regression_cv(calibrate=True):
+def build_log_regression_cv(calibrate=True, max_iter=5000):
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
@@ -25,7 +25,7 @@ def build_log_regression_cv(calibrate=True):
         cv=cv,
         scoring='roc_auc',
         class_weight='balanced',
-        max_iter=1000,
+        max_iter=max_iter,
         use_legacy_attributes=False
     )
     if calibrate:

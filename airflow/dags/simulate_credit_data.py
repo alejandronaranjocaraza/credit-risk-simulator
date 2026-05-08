@@ -1,6 +1,6 @@
 from src.credit_sim import simulate_applications
 from src.utils.evaluate_model import model_predict
-from src.utild.transform_data import scale, one_hot_encode
+from src.utils.transform_data import scale, one_hot_encode
 from datetime import datetime, timedelta, timezone
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.sdk import dag, task
@@ -77,14 +77,18 @@ def simulate_credit_applications():
         threshold = config['models'][model_name]['threshold']
 
         # Get columns
-        cols = config['models'][model_name]['columns']
+        cols = config['models'][model_name]['features']
 
         # Get data
         hook = PostgresHook(postgres_conn_id="warehouse_db")
         df = hook.get_pandas_df(
                 """
-                select * from fet__applicants
-                where rating is null or approved is null;
+                select
+                fa.*
+                from fet__applicants fa
+                left join (select id, rating, approved from raw_applicants) ra
+                on ra.id=fa.id
+                where ra.rating is null or ra.approved is null;
                 """
         )
         if df.empty:
@@ -93,11 +97,11 @@ def simulate_credit_applications():
         X = df[cols]
 
         if 'scale' in config['models'][model_name]:
-            scale_cols = config['models'][model_name]['scale']['columns']
+            scale_cols = config['models'][model_name]['scale']['features']
             X = scale(X, scale_cols)
 
         if 'one-hot' in config['models'][model_name]:
-            encode_cols = config['models'][model_name]['one-hot']['columns']
+            encode_cols = config['models'][model_name]['one-hot']['features']
             drop_first = config['models'][model_name]['one-hot']['drop-first']
             X = one_hot_encode(X, encode_cols, drop_first)
 
@@ -107,19 +111,25 @@ def simulate_credit_applications():
 
         y_prob, y_pred = model_predict(model, X, threshold)
 
-        df['approved'] = y_pred.astype(bool)
-        df['rating'] = y_prob
+        df['approved'] = (y_pred == 0).astype(bool)
+        df['rating'] = 1.0 - y_prob
 
-        hook.run(
-                """
-                update raw_applicants
-                set rating = data.rating,
-                    approved = data.approved
-                FROM (VALUES %s) AS data(id, rating, approved)
-                WHERE raw_applicants.id = data.id;
-                """,
-                parameters=list(zip(df['id'], df['rating'], df['approved']))
-                )
+        conn = hook.get_conn()
+        cursor = conn.cursor()
+
+        cursor.executemany(
+            """
+            UPDATE raw_applicants
+            SET rating = %s,
+                approved = %s
+            WHERE id = %s;
+            """,
+            list(zip(df['rating'], df['approved'], df['id']))
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
 
     applications = simulate_data()
     insert_task = insert_data(applications)
