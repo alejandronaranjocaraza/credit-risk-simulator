@@ -8,6 +8,13 @@ dbt_transform/logs/
 # -------------------------
 dbt_transform/.user.yml
 
+# Docker compose phantom dirs
+# -------------------------
+airflow/src/
+api/src/
+api/config.yml
+api/models/
+
 # Python
 # -------------------------
 __pycache__/

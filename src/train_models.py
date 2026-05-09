@@ -63,5 +63,9 @@ metrics = evaluate_model(y_prob, y_pred, y_test)
 # Save metrics
 date_str = pd.to_datetime('today').strftime('%Y%m%d')
 opts = {}
+
 with open(f"../models/"+model_name+"-"+date_str+".json", "w") as f:
+    json.dump(metrics, f, **opts)
+
+with open(f"../models/"+model_name+"-current.json", "w") as f:
     json.dump(metrics, f, **opts)

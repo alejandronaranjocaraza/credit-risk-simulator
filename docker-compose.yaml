@@ -129,6 +129,22 @@ services:
       start_period: 5s
     restart: always
 
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/main.py:/app/main.py
+      - ./src:/app/src
+      - ./models:/app/models
+      - ./config.yml:/config.yml
+    depends_on:
+      warehouse-db:
+        condition: service_healthy
+    restart: always
+
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
     # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
