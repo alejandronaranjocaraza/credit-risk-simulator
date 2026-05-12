@@ -68,40 +68,71 @@ docker compose exec airflow-worker python /opt/airflow/dags/src/train_models.py
 Each model entry supports the following fields:
 
 ```yaml
+source:
+  database: 'postgres'
+  user: 'postgres'
+  password: 'postgres'
+  host: 'warehouse-db'
+  port: '5432'
+  model: 'fet__applicants'
+
 models:
   log-regression-cv:
     active: true
-
-    # Columns passed to the model (must match dbt feature table)
     features:
-      - credit_exposure
-      - savings_score
-      - ...
-
-    # Columns to apply StandardScaler to (must be numeric)
+      - 'sex'
+      - 'credit_exposure'
+      - 'loan_term_tier'
+      - 'savings_score'
+      - 'checking_score'
+      - 'has_no_savings_info'
+      - 'has_no_checking_info'
+      - 'job_skill_level'
+      - 'housing_stability_score'
+      - 'purpose_risk_group'
     scale:
       features:
-        - credit_exposure
-        - savings_score
-
-    # Columns to one-hot encode
+        - 'credit_exposure'
+        - 'savings_score'
+        - 'checking_score'
+        - 'job_skill_level'
+        - 'housing_stability_score'
     one-hot:
-      drop-first: true    # set true for logistic regression, false for tree models
+      drop-first: true
       features:
-        - sex
-        - loan_term_tier
-
-    # Target column
-    target: defaulted
-
-    # Probability threshold for approval decision
-    # Applicants with default probability >= threshold are rejected
-    threshold: 0.53
+        - 'sex'
+        - 'loan_term_tier'
+        - 'purpose_risk_group'
+    target: 'defaulted'
+    threshold: 0.25
+  decision-tree:
+    active: true
+    features:
+      - 'age_numeric_group'
+      - 'sex'
+      - 'loan_term_numeric_tier'
+      - 'saving_accounts'
+      - 'checking_account'
+      - 'has_no_savings_info'
+      - 'has_no_checking_info'
+      - 'job_skill_level'
+      - 'housing'
+      - 'purpose_risk_group'
+    one-hot:
+      drop-first: false
+      features:
+        - 'sex'
+        - 'saving_accounts'
+        - 'checking_account'
+        - 'housing'
+        - 'purpose_risk_group'
+    target: 'defaulted'
+    threshold: 0.25
 ```
 
 ### Threshold tuning
 
-The `threshold` controls the tradeoff between precision and recall. Lowering it approves more applicants but increases default risk. Raising it is more conservative. The optimal threshold is determined during model evaluation — see `models/{model_name}-current.json` for metrics at the current threshold.
+The `threshold` controls the tradeoff between precision and recall. Raising it approves more applicants but increases default risk. Lowering it is more conservative. The optimal threshold is determined during model evaluation — see `models/{model_name}-current.json` for metrics at the current threshold.
 
 ## Dataset
 
