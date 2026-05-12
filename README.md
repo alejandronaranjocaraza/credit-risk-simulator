@@ -42,6 +42,8 @@ To test the API, open the FastAPI docs at http://localhost:8000/docs:
 <img src="assets/10.gif" width="700" alt="Demo" />
 <br>
 <img src="assets/11.gif" width="700" alt="Demo" />
+<br>
+<img src="airflow.gif" width="700" alt="Demo" />
 
 ---
 
