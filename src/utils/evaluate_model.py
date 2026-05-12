@@ -5,7 +5,7 @@ from scipy.stats import ks_2samp
 
 def model_predict(model, X_test, thresh):
     y_prob = model.predict_proba(X_test)[:, 1]
-    y_pred = (y_prob >= thresh).astype(int)
+    y_pred = (y_prob <= thresh).astype(int)
     return y_prob, y_pred
 
 

@@ -34,7 +34,7 @@ models:
         - 'loan_term_tier'
         - 'purpose_risk_group'
     target: 'defaulted'
-    threshold: 0.53
+    threshold: 0.25
   decision-tree:
     active: true
     features:
@@ -57,4 +57,4 @@ models:
         - 'housing'
         - 'purpose_risk_group'
     target: 'defaulted'
-    threshold: 0.53
+    threshold: 0.25

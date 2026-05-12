@@ -12,7 +12,7 @@ import yaml
 import pickle
 import json
 
-with open('config.yml', 'r') as f:
+with open('/opt/airflow/config.yml', 'r') as f:
     config = yaml.load(f, Loader=yaml.SafeLoader)
 
 model_name = None
@@ -53,12 +53,12 @@ model = build_model(model_name)
 model.fit(X_train, y_train)
 
 # Save model
-with open("../models/"+model_name+".pkl", "wb") as f:
+with open("/opt/airflow/models/"+model_name+".pkl", "wb") as f:
     pickle.dump(model, f)
 
 # Save full feature columns (including one-hot encoded cols
 feature_cols = X_train.columns.tolist()
-with open("../models/"+model_name+"_features.pkl", "wb") as f:
+with open("/opt/airflow/models/"+model_name+"_features.pkl", "wb") as f:
     pickle.dump(feature_cols, f)
 
 # Evaluate model
@@ -69,8 +69,8 @@ metrics = evaluate_model(y_prob, y_pred, y_test)
 date_str = pd.to_datetime('today').strftime('%Y%m%d')
 opts = {}
 
-with open(f"../models/"+model_name+"-"+date_str+".json", "w") as f:
+with open(f"/opt/airflow/models/"+model_name+"-"+date_str+".json", "w") as f:
     json.dump(metrics, f, **opts)
 
-with open(f"../models/"+model_name+"-current.json", "w") as f:
+with open(f"/opt/airflow/models/"+model_name+"-current.json", "w") as f:
     json.dump(metrics, f, **opts)

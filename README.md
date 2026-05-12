@@ -1,8 +1,41 @@
 # Credit Default ML Scoring Pipeline
 
-**Work in Progress** — This project is currently under active development and does not yet run end-to-end.
-
 This repository provides an example of a machine learning pipeline to predict customer credit default based on the applicant's general profile (e.g. sex, age, housing, and job skill level) and credit application details (duration and loan amount). The pipeline uses past customer default history to train machine learning models, ingests simulated loan applications, and calculates default probabilities per application. Finally, the pipeline classifies each new applicant as "approved" or "not approved" given a probability threshold.
+
+## Setup
+
+Requirements: Docker, Docker Compose
+
+To run, simply clone the repository:
+```bash
+git clone https://github.com/yourname/credit-risk-simulator
+cd credit-risk-simulator
+```
+
+Then run *stup.sh*:
+
+```bash
+bash setup.sh
+```
+
+This will
+
+- Setup postgres database with raw german credit data
+- Simulate dbt transformations
+- Start Airflow
+- Initiate FastApi
+
+Once setup completes:
+
+- Airflow UI: http://localhost:8080 (user: airflow, password: airflow)
+- FastAPI docs: http://localhost:8000/docs
+
+To start new applications simulation: *Open Airflow UI in browser and login. Then run simulate_credit_data DAG*. This will create new credit applications, insert them into raw_applications in postgres database, then make default predictions based on trained model.
+
+To test API go to FastAPI docs (http://localhost:8000/docs).
+    POST /candidate    → real-time single applicant scoring
+    GET  /predictions  → batch results from Airflow
+    GET  /metrics/{model_name} → model evaluation metrics
 
 ## Dataset
 

@@ -83,6 +83,8 @@ async def get_metrics(model_name: str):
 @app.post("/candidate")
 async def check_application(application: Application):
     df = build_features(application.dict())
+    cols = config['models'][model_name]['features']
+    df = df[cols]
     threshold = config['models'][model_name]['threshold']
 
     # Transform data
@@ -94,6 +96,12 @@ async def check_application(application: Application):
         encode_cols = config['models'][model_name]['one-hot']['features']
         drop_first = config['models'][model_name]['one-hot']['drop-first']
         df = one_hot_encode(df, encode_cols, drop_first)
+
+    # Get feature columns (full)
+    with open("/app/models/"+model_name+"_features.pkl", "rb") as f:
+        feature_cols = pickle.load(f)
+
+    df = df.reindex(columns=feature_cols, fill_value=0)
 
     y_prob, y_pred = model_predict(model, df, threshold)
 
