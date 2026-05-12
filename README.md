@@ -4,38 +4,104 @@ This repository provides an example of a machine learning pipeline to predict cu
 
 ## Setup
 
-Requirements: Docker, Docker Compose
+**Requirements:** Docker, Docker Compose
 
-To run, simply clone the repository:
+Clone the repository:
+
 ```bash
 git clone https://github.com/yourname/credit-risk-simulator
 cd credit-risk-simulator
 ```
 
-Then run *stup.sh*:
+Run the setup script:
 
 ```bash
 bash setup.sh
 ```
 
-This will
+This will:
+- Start all Docker services (Postgres, Airflow, FastAPI)
+- Load the German Credit dataset into Postgres
+- Run dbt transformations to build the feature table
+- Train the configured ML model and save `model.pkl`
 
-- Setup postgres database with raw german credit data
-- Simulate dbt transformations
-- Start Airflow
-- Initiate FastApi
+Once complete:
+- **Airflow UI:** http://localhost:8080 (user: `airflow`, password: `airflow`)
+- **FastAPI docs:** http://localhost:8000/docs
 
-Once setup completes:
+To start simulating new applications, open the Airflow UI and trigger the `simulate_credit_data` DAG. This will generate new applicants, insert them into Postgres, run dbt transformations, and score each applicant with the trained model.
 
-- Airflow UI: http://localhost:8080 (user: airflow, password: airflow)
-- FastAPI docs: http://localhost:8000/docs
+To test the API, open the FastAPI docs at http://localhost:8000/docs:
 
-To start new applications simulation: *Open Airflow UI in browser and login. Then run simulate_credit_data DAG*. This will create new credit applications, insert them into raw_applications in postgres database, then make default predictions based on trained model.
+| Endpoint | Description |
+|----------|-------------|
+| `POST /candidate` | Real-time scoring for a single applicant |
+| `GET /predictions` | Batch results from the last Airflow run |
+| `GET /metrics/{model_name}` | Evaluation metrics for a trained model |
 
-To test API go to FastAPI docs (http://localhost:8000/docs).
-    POST /candidate    → real-time single applicant scoring
-    GET  /predictions  → batch results from Airflow
-    GET  /metrics/{model_name} → model evaluation metrics
+---
+
+## Configuration
+
+Model selection and feature configuration are controlled via `config.yml` in the project root.
+
+### Selecting a model
+
+Each model has an `active` flag. The pipeline uses the first model with `active: true`:
+
+```yaml
+models:
+  log-regression-cv:
+    active: true    # ← this model will be used
+  decision-tree:
+    active: false
+```
+
+To switch models, set `active: true` on the desired model and `active: false` on the rest, then retrain:
+
+```bash
+docker compose exec airflow-worker python /opt/airflow/dags/src/train_models.py
+```
+
+### Model configuration
+
+Each model entry supports the following fields:
+
+```yaml
+models:
+  log-regression-cv:
+    active: true
+
+    # Columns passed to the model (must match dbt feature table)
+    features:
+      - credit_exposure
+      - savings_score
+      - ...
+
+    # Columns to apply StandardScaler to (must be numeric)
+    scale:
+      features:
+        - credit_exposure
+        - savings_score
+
+    # Columns to one-hot encode
+    one-hot:
+      drop-first: true    # set true for logistic regression, false for tree models
+      features:
+        - sex
+        - loan_term_tier
+
+    # Target column
+    target: defaulted
+
+    # Probability threshold for approval decision
+    # Applicants with default probability >= threshold are rejected
+    threshold: 0.53
+```
+
+### Threshold tuning
+
+The `threshold` controls the tradeoff between precision and recall. Lowering it approves more applicants but increases default risk. Raising it is more conservative. The optimal threshold is determined during model evaluation — see `models/{model_name}-current.json` for metrics at the current threshold.
 
 ## Dataset
 
