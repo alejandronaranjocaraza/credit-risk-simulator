@@ -89,10 +89,6 @@ docker compose exec airflow-worker python /opt/airflow/dags/src/train_models.py
 
 ### Threshold tuning
 
-Lowering the threshold approves more applicants but increases default risk. Raising it is more conservative. The current threshold of `0.25` is intentionally low to minimize false negatives (missed defaults). Evaluation metrics at this threshold are available at `GET /metrics/{model_name}`.
-
-### Threshold tuning
-
 The `threshold` controls the tradeoff between precision and recall. Raising it approves more applicants but increases default risk. Lowering it is more conservative. The optimal threshold is determined during model evaluation — see `models/{model_name}-current.json` for metrics at the current threshold.
 
 ## Dataset
