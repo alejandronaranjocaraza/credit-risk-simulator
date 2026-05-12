@@ -56,6 +56,11 @@ model.fit(X_train, y_train)
 with open("../models/"+model_name+".pkl", "wb") as f:
     pickle.dump(model, f)
 
+# Save full feature columns (including one-hot encoded cols
+feature_cols = X_train.columns.tolist()
+with open("../models/"+model_name+"_features.pkl", "wb") as f:
+    pickle.dump(feature_cols, f)
+
 # Evaluate model
 y_prob, y_pred = model_predict(model, X_test, threshold)
 metrics = evaluate_model(y_prob, y_pred, y_test)

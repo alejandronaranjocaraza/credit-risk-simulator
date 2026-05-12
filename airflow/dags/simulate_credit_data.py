@@ -82,7 +82,7 @@ def simulate_credit_applications():
         # Get data
         hook = PostgresHook(postgres_conn_id="warehouse_db")
         df = hook.get_pandas_df(
-                """
+            """
                 select
                 fa.*
                 from fet__applicants fa
@@ -94,6 +94,7 @@ def simulate_credit_applications():
         if df.empty:
             print("No unscored rows found, skipping.")
             return
+
         X = df[cols]
 
         if 'scale' in config['models'][model_name]:
@@ -108,6 +109,12 @@ def simulate_credit_applications():
         # Get model
         with open("/opt/airflow/models/"+model_name+".pkl", "rb") as f:
             model = pickle.load(f)
+
+        # Get feature columns (full)
+        with open("/opt/airflow/models/"+model_name+"_features.pkl", "rb") as f:
+            feature_cols = pickle.load(f)
+
+        X = X.reindex(columns=feature_cols, fill_value=0)
 
         y_prob, y_pred = model_predict(model, X, threshold)
 
