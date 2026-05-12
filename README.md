@@ -45,9 +45,21 @@ To test the API, open the FastAPI docs at http://localhost:8000/docs:
 
 Model selection and feature configuration are controlled via `config.yml` in the project root.
 
+### Database connection
+
+```yaml
+source:
+  database: 'postgres'
+  user: 'postgres'
+  password: 'postgres'
+  host: 'warehouse-db'   # Docker service name — do not change
+  port: '5432'
+  model: 'fet__applicants'  # dbt feature table used for scoring
+```
+
 ### Selecting a model
 
-Each model has an `active` flag. The pipeline uses the first model with `active: true`:
+The pipeline uses the first model with `active: true`. To switch models, set `active: true` on the desired model and `active: false` on the other, then retrain:
 
 ```yaml
 models:
@@ -57,78 +69,27 @@ models:
     active: false
 ```
 
-To switch models, set `active: true` on the desired model and `active: false` on the rest, then retrain:
+Retrain after switching:
 
 ```bash
 docker compose exec airflow-worker python /opt/airflow/dags/src/train_models.py
 ```
 
-### Model configuration
+### Model fields
 
-Each model entry supports the following fields:
+| Field | Description |
+|-------|-------------|
+| `active` | Whether this model is selected for training and scoring |
+| `features` | Columns passed to the model — must exist in `fet__applicants` |
+| `scale.features` | Numeric columns to apply StandardScaler to |
+| `one-hot.features` | Categorical columns to one-hot encode |
+| `one-hot.drop-first` | Drop first dummy column — use `true` for logistic regression, `false` for tree models |
+| `target` | Target column for training |
+| `threshold` | Probability cutoff for approval — applicants with default probability above this are rejected |
 
-```yaml
-source:
-  database: 'postgres'
-  user: 'postgres'
-  password: 'postgres'
-  host: 'warehouse-db'
-  port: '5432'
-  model: 'fet__applicants'
+### Threshold tuning
 
-models:
-  log-regression-cv:
-    active: true
-    features:
-      - 'sex'
-      - 'credit_exposure'
-      - 'loan_term_tier'
-      - 'savings_score'
-      - 'checking_score'
-      - 'has_no_savings_info'
-      - 'has_no_checking_info'
-      - 'job_skill_level'
-      - 'housing_stability_score'
-      - 'purpose_risk_group'
-    scale:
-      features:
-        - 'credit_exposure'
-        - 'savings_score'
-        - 'checking_score'
-        - 'job_skill_level'
-        - 'housing_stability_score'
-    one-hot:
-      drop-first: true
-      features:
-        - 'sex'
-        - 'loan_term_tier'
-        - 'purpose_risk_group'
-    target: 'defaulted'
-    threshold: 0.25
-  decision-tree:
-    active: true
-    features:
-      - 'age_numeric_group'
-      - 'sex'
-      - 'loan_term_numeric_tier'
-      - 'saving_accounts'
-      - 'checking_account'
-      - 'has_no_savings_info'
-      - 'has_no_checking_info'
-      - 'job_skill_level'
-      - 'housing'
-      - 'purpose_risk_group'
-    one-hot:
-      drop-first: false
-      features:
-        - 'sex'
-        - 'saving_accounts'
-        - 'checking_account'
-        - 'housing'
-        - 'purpose_risk_group'
-    target: 'defaulted'
-    threshold: 0.25
-```
+Lowering the threshold approves more applicants but increases default risk. Raising it is more conservative. The current threshold of `0.25` is intentionally low to minimize false negatives (missed defaults). Evaluation metrics at this threshold are available at `GET /metrics/{model_name}`.
 
 ### Threshold tuning
 
