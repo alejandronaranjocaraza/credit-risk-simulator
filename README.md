@@ -72,9 +72,9 @@ To test the API, open the FastAPI docs at http://localhost:8000/docs:
 | `GET /predictions/{num_predictions}` | Batch results from the last Airflow run |
 | `GET /metrics/{model_name}` | Evaluation metrics for a trained model |
 
-<img src="assets/10.gif" width="700" alt="Demo" />
+<img src="assets/bash1.gif" width="700" alt="Demo" />
 <br>
-<img src="assets/11.gif" width="700" alt="Demo" />
+<img src="assets/bash2.gif" width="700" alt="Demo" />
 <br>
 <img src="assets/airflow.gif" width="700" alt="Demo" />
 <br>
