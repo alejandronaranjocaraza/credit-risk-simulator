@@ -1,4 +1,3 @@
-# Needs adjusting for running inside docker container
 from utils.extract_data import extract_data
 from utils.transform_data import scale
 from utils.transform_data import one_hot_encode
