@@ -5,9 +5,9 @@ This repository provides an example of a machine learning pipeline to predict cu
 Model metrics (AUC-ROC, KS Statistic, Precision, Recall), single applicant predictions and simulation results are available via FastAPI.
 A summary of model performance and recent simmulations ar also viewable through a Streamlit Dashboard.
 
-<img src="assets/sreamlit1.png" width="700" alt="Demo" />
+<img src="assets/streamlit1.png" width="700" alt="Demo" />
 <br>
-<img src="assets/sreamlit2.png" width="700" alt="Demo" />
+<img src="assets/streamlit2.png" width="700" alt="Demo" />
 <br>
 <img src="assets/table.gif" width="700" alt="Demo" />
 <br>
