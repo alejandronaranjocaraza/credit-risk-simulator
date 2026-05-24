@@ -26,3 +26,4 @@ docker compose exec airflow-worker python /opt/airflow/dags/src/train_models.py
 echo "Done. Everything is ready."
 echo "Airflow: http://localhost:8080"
 echo "FastAPI: http://localhost:8000/docs"
+echo "Dashboard:  http://localhost:8501"

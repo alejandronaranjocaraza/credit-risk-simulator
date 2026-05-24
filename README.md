@@ -2,6 +2,17 @@
 
 This repository provides an example of a machine learning pipeline to predict customer credit default based on the applicant's general profile (e.g. sex, age, housing, and job skill level) and credit application details (duration and loan amount). The pipeline uses past customer default history to train machine learning models, ingests simulated loan applications, and calculates default probabilities per application. Finally, the pipeline classifies each new applicant as "approved" or "not approved" given a probability threshold.
 
+Model metrics (AUC-ROC, KS Statistic, Precision, Recall), single applicant predictions and simulation results are available via FastAPI.
+A summary of model performance and recent simmulations ar also viewable through a Streamlit Dashboard.
+
+<img src="assets/sreamlit1.png" width="700" alt="Demo" />
+<br>
+<img src="assets/sreamlit2.png" width="700" alt="Demo" />
+<br>
+<img src="assets/table.gif" width="700" alt="Demo" />
+<br>
+<img src="assets/airflow.gif" width="700" alt="Demo" />
+
 ## Setup
 
 **Requirements:** Docker, Docker Compose
@@ -28,6 +39,7 @@ This will:
 Once complete:
 - **Airflow UI:** http://localhost:8080 (user: `airflow`, password: `airflow`)
 - **FastAPI docs:** http://localhost:8000/docs
+- **Streamlit Dashboarad:** http://localhost:8501/
 
 To start simulating new applications, open the Airflow UI and trigger the `simulate_credit_data` DAG. This will generate new applicants, insert them into Postgres, run dbt transformations, and score each applicant with the trained model.
 
@@ -44,6 +56,8 @@ To test the API, open the FastAPI docs at http://localhost:8000/docs:
 <img src="assets/11.gif" width="700" alt="Demo" />
 <br>
 <img src="assets/airflow.gif" width="700" alt="Demo" />
+<br>
+<img src="assets/fastapi.png" width="700" alt="Demo" />
 
 ---
 

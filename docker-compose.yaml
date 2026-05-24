@@ -110,6 +110,21 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+
+  streamlit:
+      image: python:3.11-slim
+      working_dir: /app
+      command: >
+        bash -c "pip install streamlit plotly requests pyyaml pandas streamlit-autorefresh --quiet &&
+                 streamlit run app.py --server.port 8501 --server.address 0.0.0.0"
+      volumes:
+        - ./streamlit:/app
+        - ./config.yml:/config.yml
+      ports:
+        - "8501:8501"
+      depends_on:
+        - fastapi
+      restart: always
   
   warehouse-db:
     image: postgres

@@ -112,8 +112,8 @@ async def check_application(application: Application):
     }
 
 
-@app.get("/predictions")
-async def get_predictions():
+@app.get("/predictions/{num_predictions}")
+async def get_predictions(num_predictions: int):
     conn = psycopg2.connect(
         host="warehouse-db",
         port=5432,
@@ -140,9 +140,10 @@ async def get_predictions():
             simulated_at
         FROM raw_applicants
         WHERE approved IS NOT NULL
-        ORDER BY simulated_at DESC
-        LIMIT 100;
-        """
+        ORDER BY simulated_at DESC, id DESC
+        LIMIT %(num_predictions)s;
+        """,
+        {'num_predictions': num_predictions}
     )
     rows = cursor.fetchall()
     cursor.close()
